@@ -1,0 +1,30 @@
+[
+  {
+    "type": "t-shirt",
+    "material": "Cotton",
+    "recycling_difficulty": "Easy",
+    "reuse_options": ["Make a tote bag", "Use as cleaning rag"],
+    "donate_options": ["Local shelter", "Textile recycling bin"]
+  },
+  {
+    "type": "jeans",
+    "material": "Denim",
+    "recycling_difficulty": "Moderate",
+    "reuse_options": ["Turn into shorts", "DIY pouch"],
+    "donate_options": ["Clothing drives", "NGOs"]
+  },
+  {
+    "type": "jacket",
+    "material": "Leather",
+    "recycling_difficulty": "Hard",
+    "reuse_options": ["Sell online", "Turn into patches"],
+    "donate_options": ["Refurbishment centers", "Thrift shops"]
+  },
+  {
+    "type": "sweater",
+    "material": "Wool",
+    "recycling_difficulty": "Moderate",
+    "reuse_options": ["Make mittens", "Stuff for toys"],
+    "donate_options": ["Winter clothing drives", "Shelters"]
+  }
+]

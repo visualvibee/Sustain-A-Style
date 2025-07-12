@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClothCycle - Circular Fashion Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terracotta: #CD7F32;
+            --olive-green: #8B966D;
+            --almond-cream: #F7F3E9;
+            --slate-blue: #6B7B8C;
+            --white: #FFFFFF;
+            --text-dark: #2C3E50;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--almond-cream) 0%, #F0EBE3 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--white);
+            box-shadow: 0 2px 10px var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--olive-green) 0%, var(--slate-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: var(--slate-blue);
+            font-weight: 400;
+        }
+
+        .search-section {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px var(--shadow);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            border: 2px solid var(--almond-cream);
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: var(--almond-cream);
+            color: var(--text-dark);
+        }
+
+        .search-input:focus {
+            border-color: var(--slate-blue);
+            box-shadow: 0 0 0 3px rgba(107, 123, 140, 0.15);
+        }
+
+        .search-button {
+            background: linear-gradient(135deg, var(--terracotta) 0%, #B8682F 100%);
+            color: var(--white);
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(205, 127, 50, 0.4);
+        }
+
+        .search-button:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .results-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, var(--slate-blue) 0%, var(--olive-green) 100%);
+            color: var(--white);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .results-content {
+            padding: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: var(--almond-cream);
+            padding: 24px;
+            border-radius: 15px;
+            border-left: 4px solid var(--slate-blue);
+            border-top: 2px solid var(--olive-green);
+        }
+
+        .info-card h3 {
+            color: var(--slate-blue);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card p {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-easy {
+            background: #E8F5E8;
+            color: #2E7D32;
+        }
+
+        .difficulty-medium {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .difficulty-hard {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .list-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .list-card {
+            background: var(--almond-cream);
+            padding: 24px;
+            border-radius: 15px;
+            border-left: 4px solid var(--olive-green);
+            border-top: 2px solid var(--slate-blue);
+        }
+
+        .list-card h3 {
+            color: var(--olive-green);
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .list-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(107, 123, 140, 0.1);
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .list-card li:last-child {
+            border-bottom: none;
+        }
+
+        .list-card li::before {
+            content: "•";
+            color: var(--olive-green);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--slate-blue);
+            font-size: 1rem;
+            background: var(--white);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -2px 10px var(--shadow);
+        }
+
+        .footer-tagline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .header-title {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .search-section {
+                padding: 30px 20px;
+            }
+
+            .search-input {
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .search-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .results-content {
+                padding: 20px;
+            }
+
+            .info-grid,
+            .list-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .info-card,
+            .list-card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.7rem;
+            }
+
+            .search-section {
+                padding: 20px 15px;
+            }
+
+            .results-content {
+                padding: 15px;
+            }
+
+            .info-card,
+            .list-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="header-title">
+                <span class="icon">♻️</span>
+                ClothCycle
+            </h1>
+            <p class="header-subtitle">Circular Fashion Guide</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="search-section">
+            <div class="input-group">
+                <label for="clothingInput" class="input-label">Enter Clothing Type</label>
+                <input 
+                    type="text" 
+                    id="clothingInput" 
+                    class="search-input" 
+                    placeholder="e.g., T-Shirt, Jeans, Sweater"
+                    autocomplete="off"
+                >
+            </div>
+            <button class="search-button" onclick="searchClothing()">
+                <span class="icon">🔍</span>
+                Search
+            </button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2 class="results-title">
+                    <span class="icon">👕</span>
+                    <span id="clothingType">Cotton T-Shirt</span>
+                </h2>
+            </div>
+            <div class="results-content">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><span class="icon">🧵</span>Material</h3>
+                        <p id="materialInfo">100% Organic Cotton</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><span class="icon">⚙️</span>Recycling Difficulty</h3>
+                        <p>
+                            <span class="difficulty-badge difficulty-easy" id="difficultyBadge">Easy</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="list-section">
+                    <div class="list-card">
+                        <h3><span class="icon">🔄</span>Reuse Options</h3>
+                        <ul id="reuseOptions">
+                            <li>Cut into cleaning rags</li>
+                            <li>Use as plant protection covers</li>
+                            <li>Transform into tote bags</li>
+                            <li>Create pet toys or bedding</li>
+                            <li>Use for craft projects</li>
+                        </ul>
+                    </div>
+                    <div class="list-card">
+                        <h3><span class="icon">🎁</span>Donation Suggestions</h3>
+                        <ul id="donationOptions">
+                            <li>Local thrift stores</li>
+                            <li>Clothing bins in your area</li>
+                            <li>Homeless shelters</li>
+                            <li>Community centers</li>
+                            <li>Online donation platforms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="footer-tagline">
+                Built for Climate Hackathons
+                <span class="icon">🌍</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const clothingData = {
+            "t-shirt": {
+                type: "Cotton T-Shirt",
+                material: "100% Organic Cotton",
+                difficulty: "Easy",
+                difficultyClass: "difficulty-easy",
+                reuse: [
+                    "Cut into cleaning rags",
+                    "Use as plant protection covers",
+                    "Transform into tote bags",
+                    "Create pet toys or bedding",
+                    "Use for craft projects"
+                ],
+                donation: [
+                    "Local thrift stores",
+                    "Clothing bins in your area",
+                    "Homeless shelters",
+                    "Community centers",
+                    "Online donation platforms"
+                ]
+            },
+            "jeans": {
+                type: "Denim Jeans",
+                material: "Cotton Denim with Elastane",
+                difficulty: "Medium",
+                difficultyClass: "difficulty-medium",
+                reuse: [
+                    "Turn into shorts or skirts",
+                    "Create denim bags or purses",
+                    "Use pockets for small organizers",
+                    "Make denim patches for repairs",
+                    "Craft into plant pot covers"
+                ],
+                donation: [
+                    "Denim recycling programs",
+                    "Vintage clothing stores",
+                    "Community swap events",
+                    "Local charities",
+                    "Fashion upcycling workshops"
+                ]
+            },
+            "sweater": {
+                type: "Wool Sweater",
+                material: "Merino Wool Blend",
+                difficulty: "Hard",
+                difficultyClass: "difficulty-hard",
+                reuse: [
+                    "Unravel yarn for knitting projects",
+                    "Cut into fabric squares for quilts",
+                    "Use as protective wrapping",
+                    "Create cozy pet blankets",
+                    "Make felted crafts"
+                ],
+                donation: [
+                    "Wool recycling centers",
+                    "Craft supply stores",
+                    "Knitting circles",
+                    "Animal shelters (for bedding)",
+                    "Textile recycling programs"
+                ]
+            },
+            "jacket": {
+                type: "Synthetic Jacket",
+                material: "Polyester with Insulation",
+                difficulty: "Hard",
+                difficultyClass: "difficulty-hard",
+                reuse: [
+                    "Donate to outdoor programs",
+                    "Use insulation for other projects",
+                    "Repurpose zippers and buttons",
+                    "Create waterproof garden covers",
+                    "Make camping gear repairs"
+                ],
+                donation: [
+                    "Outdoor gear co-ops",
+                    "Homeless outreach programs",
+                    "Sporting goods stores",
+                    "School outdoor programs",
+                    "Emergency relief organizations"
+                ]
+            }
+        };
+
+        function searchClothing() {
+            const input = document.getElementById('clothingInput').value.toLowerCase().trim();
+            const resultsSection = document.getElementById('resultsSection');
+            
+            if (!input) {
+                alert('Please enter a clothing type to search!');
+                return;
+            }
+
+            let clothingInfo = null;
+            for (const [key, value] of Object.entries(clothingData)) {
+                if (input.includes(key) || key.includes(input)) {
+                    clothingInfo = value;
+                    break;
+                }
+            }
+
+            if (!clothingInfo) {
+                clothingInfo = {
+                    type: input.charAt(0).toUpperCase() + input.slice(1),
+                    material: "Mixed Materials",
+                    difficulty: "Medium",
+                    difficultyClass: "difficulty-medium",
+                    reuse: [
+                        "Check for repurposing opportunities",
+                        "Consider creative DIY projects",
+                        "Use for cleaning or protection",
+                        "Donate if in good condition",
+                        "Research local recycling options"
+                    ],
+                    donation: [
+                        "Local thrift stores",
+                        "Community donation centers",
+                        "Online marketplaces",
+                        "Clothing swap events",
+                        "Textile recycling programs"
+                    ]
+                };
+            }
+
+            document.getElementById('clothingType').textContent = clothingInfo.type;
+            document.getElementById('materialInfo').textContent = clothingInfo.material;
+            
+            const difficultyBadge = document.getElementById('difficultyBadge');
+            difficultyBadge.textContent = clothingInfo.difficulty;
+            difficultyBadge.className = `difficulty-badge ${clothingInfo.difficultyClass}`;
+
+            const reuseList = document.getElementById('reuseOptions');
+            reuseList.innerHTML = clothingInfo.reuse.map(item => `<li>${item}</li>`).join('');
+
+            const donationList = document.getElementById('donationOptions');
+            donationList.innerHTML = clothingInfo.donation.map(item => `<li>${item}</li>`).join('');
+
+            resultsSection.classList.add('visible');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        document.getElementById('clothingInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchClothing();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('clothingInput').focus();
+        });
+    </script>
+</body>
+</html>
